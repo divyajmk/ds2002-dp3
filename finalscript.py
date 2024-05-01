@@ -11,6 +11,9 @@ import json
 url = "https://sqs.us-east-1.amazonaws.com/440848399208/yaq7fm"
 sqs = boto3.client('sqs')
 
+# create dictionary
+messages = {}
+
 def delete_message(handle):
     try:
         # Delete message from SQS queue
@@ -47,6 +50,9 @@ def get_message():
                 word = response['Messages'][0]['MessageAttributes']['word']['StringValue']
                 handle = response['Messages'][0]['ReceiptHandle']
 
+                #store in dictionary
+                messages[order] = word
+
                 # Print the message attributes - this is what you want to work with to reassemble the message
                 print(f"Order: {order}")
                 print(f"Word: {word}")
@@ -55,7 +61,7 @@ def get_message():
             else:
                 print("No message in the queue")
                 break
-                # exit(1)
+
                 
     # Handle any errors that may occur connecting to SQS
     except ClientError as e:
@@ -64,3 +70,13 @@ def get_message():
 # Trigger the function
 if __name__ == "__main__":
     get_message()
+
+#print dictionary
+print("Messages Dictionary:", messages)
+
+# assemble words according to their order values
+assembled_phrase = ' '.join(messages[order] for order in sorted(messages.keys()))
+
+# Print the assembled phrase
+print("Assembled Phrase:", assembled_phrase)
+
