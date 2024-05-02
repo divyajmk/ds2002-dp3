@@ -16,16 +16,17 @@ messages = {}
 # create list to store receipt handles for when deleting messages
 receipt_handle_list = []
 
-def delete_message(handle):
-    try:
-        # Delete message from SQS queue
-        sqs.delete_message(
-            QueueUrl=url,
-            ReceiptHandle=handle
-        )
-        print("Message deleted")
-    except ClientError as e:
-        print(e.response['Error']['Message'])
+def delete_messages(handles):
+    for h in handles:
+        try:
+            # Delete message from SQS queue
+            sqs.delete_message(
+                QueueUrl=url,
+                ReceiptHandle=handle
+            )
+            print("Message deleted")
+        except ClientError as e:
+            print(e.response['Error']['Message'])
 
 def get_message():
     try:
@@ -85,4 +86,4 @@ if __name__ == "__main__":
     print("Assembled Phrase:", assembled_phrase)
 
     # Now, delete messages 
-    # delete_message(receipt_handle_list)
+    delete_messages(receipt_handle_list)
