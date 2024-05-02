@@ -8,11 +8,13 @@ import requests
 import json
 
 # Set up your SQS queue URL and boto3 client
-url = "https://sqs.us-east-1.amazonaws.com/440848399208/yaq7fm"
+url = "https://sqs.us-east-1.amazonaws.com/440848399208/jww2fj"
 sqs = boto3.client('sqs')
 
 # create dictionary
 messages = {}
+# create list to store receipt handles for when deleting messages
+receipt_handle_list = []
 
 def delete_message(handle):
     try:
@@ -52,6 +54,8 @@ def get_message():
 
                 #store in dictionary
                 messages[order] = word
+                # store in list too 
+                receipt_handle_list.append(handle)
 
                 # Print the message attributes - this is what you want to work with to reassemble the message
                 print(f"Order: {order}")
@@ -71,12 +75,14 @@ def get_message():
 if __name__ == "__main__":
     get_message()
 
-#print dictionary
-print("Messages Dictionary:", messages)
+    #print dictionary
+    print("Messages Dictionary:", messages)
 
-# assemble words according to their order values
-assembled_phrase = ' '.join(messages[order] for order in sorted(messages.keys()))
+    # assemble words according to their order values
+    assembled_phrase = ' '.join(messages[order] for order in sorted(messages.keys()))
 
-# Print the assembled phrase
-print("Assembled Phrase:", assembled_phrase)
+    # Print the assembled phrase
+    print("Assembled Phrase:", assembled_phrase)
 
+    # Now, delete messages 
+    # delete_message(receipt_handle_list)
