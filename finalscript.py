@@ -14,19 +14,18 @@ sqs = boto3.client('sqs')
 # create dictionary
 messages = {}
 # create list to store receipt handles for when deleting messages
-receipt_handle_list = []
+receipt_handle = []
 
-def delete_messages(handles):
-    for h in handles:
-        try:
-            # Delete message from SQS queue
-            sqs.delete_message(
-                QueueUrl=url,
-                ReceiptHandle=handle
-            )
-            print("Message deleted")
-        except ClientError as e:
-            print(e.response['Error']['Message'])
+def delete_message(handles):
+    try:
+        # Delete message from SQS queue
+        sqs.delete_message(
+            QueueUrl=url,
+            ReceiptHandle=handle
+        )
+        print("Message deleted")
+    except ClientError as e:
+        print(e.response['Error']['Message'])
 
 def get_message():
     try:
@@ -56,7 +55,7 @@ def get_message():
                 #store in dictionary
                 messages[order] = word
                 # store in list too 
-                receipt_handle_list.append(handle)
+                receipt_handle.append(handle)
 
                 # Print the message attributes - this is what you want to work with to reassemble the message
                 print(f"Order: {order}")
@@ -86,4 +85,5 @@ if __name__ == "__main__":
     print("Assembled Phrase:", assembled_phrase)
 
     # Now, delete messages 
-    delete_messages(receipt_handle_list)
+    # for handle in receipt_handle:
+    #     delete_message(handle)
