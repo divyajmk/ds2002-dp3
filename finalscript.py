@@ -85,5 +85,5 @@ if __name__ == "__main__":
     print("Assembled Phrase:", assembled_phrase)
 
     # Now, delete messages 
-    # for handle in receipt_handle:
-    #     delete_message(handle)
+    for handle in receipt_handle:
+        delete_message(handle)
